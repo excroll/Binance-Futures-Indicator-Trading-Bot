@@ -14,13 +14,9 @@ It would be even better to attach a database to it, but this is optional.<br />
 
 
 
-This project was created in Visual Studio 2022, DotNet-6.0
-
-Press debug to run the script
-
-**Indicators data was tested on Binance spot Tradingview terminal**
-
-The libraries used for the example where:
-**Binance.Net-8.0.0 -JKorf, CryptoExchange.Net-5.0.0 -JKorf**
-
-Install if needed the necessary dependencies before testing from NuGet
+This project was created in Visual Studio 2022, DotNet-6.0<br />
+Press **DEBUG** to run the script<br />
+**Indicators data was tested on Binance spot Tradingview terminal**<br />
+The libraries used where:<br />
+**Binance.Net-8.0.0 -JKorf, CryptoExchange.Net-5.0.0 -JKorf**<br />
+Install if needed the necessary dependencies before testing from NuGet<br />
