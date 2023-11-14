@@ -12,7 +12,7 @@ It would be even better to attach a database to it, but this is optional.<br />
 
 <b>Attention! This bot is not finalized and not configured until the final, so be careful when trading on the stock exchange, I am not responsible for your possible financial losses. </b><br />
 
-If you have a delay of more than 1000 milliseconds, then set **Time_Sync_Tool**, otherwise the Binance API will reject your connection
+If you have a delay of more than 1000 milliseconds, then set **Time_Sync_Tool**, otherwise the Binance API will reject your connection. Or download https://gunbot.shop/time-sync-tool-for-gunbot/
 
 
 This project was created in Visual Studio 2022, DotNet-6.0<br />
