@@ -8,7 +8,7 @@ You can set points to enter the transaction, now they are +1 on RSI and + 1 on B
 It would be even better to attach a database to it, but this is optional.<br />
 
 
-<b> <font color="red" size="24">Change the leverage on BINANCE Futures to x1!!!!</font> </b>
+<b> <font color="red" size="24">Change the leverage on BINANCE Futures to x1 !!!!</font> </b>
 
 <b>Attention! This bot is not finalized and not configured until the final, so be careful when trading on the stock exchange, I am not responsible for your possible financial losses. </b><br />
 
