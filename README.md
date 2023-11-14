@@ -10,4 +10,17 @@ It would be even better to attach a database to it, but this is optional.<br />
 
 <b> <font color="red" size="24">Change the leverage on BINANCE Futures to x1!!!!</font> </b>
 
-<b>Attention! This bot is not finalized and not configured until the final, so be careful when trading on the stock exchange, I am not responsible for your possible financial losses. </b>
+<b>Attention! This bot is not finalized and not configured until the final, so be careful when trading on the stock exchange, I am not responsible for your possible financial losses. </b><br />
+
+
+
+This project was created in Visual Studio 2022, DotNet-6.0
+
+Press debug to run the script
+
+**Indicators data was tested on Binance spot Tradingview terminal**
+
+The libraries used for the example where:
+**Binance.Net-8.0.0 -JKorf, CryptoExchange.Net-5.0.0 -JKorf**
+
+Install if needed the necessary dependencies before testing from NuGet
