@@ -18,5 +18,5 @@ This project was created in Visual Studio 2022, DotNet-6.0<br />
 Press **DEBUG** to run the script<br />
 **Indicators data was tested on Binance spot Tradingview terminal**<br />
 The libraries used where:<br />
-**Binance.Net-8.0.0 -JKorf, CryptoExchange.Net-5.0.0 -JKorf**<br />
-Install if needed the necessary dependencies before testing from NuGet<br />
+**Binance.Net-8.0.0 -JKorf, CryptoExchange.Net-5.0.0 -JKorf, Newtonsoft.Json 13.0.2, NLog 5.1.2, TechnicalAnalysis.Net 2.0.0**<br />
+**Install** if needed the necessary dependencies before testing from **NuGet**<br />
