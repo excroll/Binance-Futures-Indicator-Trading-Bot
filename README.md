@@ -4,7 +4,7 @@
 
 Paste your API into the appropriate fields in the code, use CTRL+F to find all the lines where you need to enter API keys.<br />
 The bot trades on 2 indicators (can be changed in the code) <b>RSI</b> and <b>BollingerBands</b> by changing the variable <b>POINTS_TO_ENTER = 2 </b> <br />
-You can set points to enter the transaction, now they are +1 on RSI and + 1 on Bollinger, the same logic for sale. The bot is not 100% finalized, but it sometimes showed me profits and more often losses, it needs to be tested and configured, which I don't want.<br />
+You can set points to enter the transaction, when the RSI value falls below 35 (oversold zone) now they are +1 on **RSI** and when the price crosses the lower Bollinger + 1 on **BollingerBands**, the same logic for sale (when the price crosses the Bollinger SMA +1 **enter_points**). The bot is not 100% finalized, but it sometimes showed me profits and more often losses, it needs to be tested and configured, which I don't want.<br />
 It would be even better to attach a database to it, but this is optional.<br />
 
 
