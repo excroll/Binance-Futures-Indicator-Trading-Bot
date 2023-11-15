@@ -35,7 +35,7 @@ Indicators are implemented in this bot:
 - [x] AwesomeOscilator(Bill Williams)
 - [ ] and more...
 
-When you get rich with the help of this bot and want to thank me, then I will be very happy with any donation: </br>
+When you get rich with the help of this bot and want to thank me, I will be very happy with any donation: </br>
 XRP: **rJn2zAPdFA193sixJwuFixRkYDUtx3apQh** </br>
 XRP Tag (memo): **500425854**</br>
 LTC: **LZS5oKRVDMwRwXnvwZvXHLiGnn9WkzZiwk**</br>
