@@ -1,4 +1,4 @@
-# Binance-Future-Indicators-Trading-Bot
+# Binance-Futures-Indicators-Trading-Bot
 
 ![Image alt](https://github.com/eXcroll/Binance-Future-Indicators-Trading-Bot/blob/master/apii.png)
 
