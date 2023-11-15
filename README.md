@@ -34,3 +34,8 @@ Indicators are implemented in this bot:
 - [x] IchimokuCloud
 - [x] AwesomeOscilator(Bill Williams)
 - [ ] and more...
+
+When you get rich with the help of this bot and want to thank me, then I will be very happy with any donation :)
+XRP: rJn2zAPdFA193sixJwuFixRkYDUtx3apQh 
+XRP Tag (memo): 500425854
+LTC: LZS5oKRVDMwRwXnvwZvXHLiGnn9WkzZiwk
