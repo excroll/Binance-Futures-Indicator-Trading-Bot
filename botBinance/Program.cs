@@ -197,7 +197,7 @@ namespace botBinance
 
             var client23 = new BinanceClient(new BinanceClientOptions
             {
-                ApiCredentials = new ApiCredentials("", ""),
+                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
                 SpotApiOptions = new BinanceApiClientOptions
                 {
                     BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
@@ -226,7 +226,7 @@ namespace botBinance
         {
             var client = new BinanceClient(new BinanceClientOptions
             {
-                ApiCredentials = new ApiCredentials("", ""),
+                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
                 SpotApiOptions = new BinanceApiClientOptions
                 {
                     BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
@@ -295,7 +295,7 @@ namespace botBinance
         {
             var client = new BinanceClient(new BinanceClientOptions
             {
-                ApiCredentials = new ApiCredentials("", ""),
+                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
                 SpotApiOptions = new BinanceApiClientOptions
                 {
                     BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
@@ -388,7 +388,7 @@ namespace botBinance
         {
             var client = new BinanceClient(new BinanceClientOptions
             {
-                ApiCredentials = new ApiCredentials("", ""),
+                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
                 SpotApiOptions = new BinanceApiClientOptions
                 {
                     BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
@@ -508,6 +508,19 @@ namespace botBinance
                 double[] arrCloses1m = ConvertToDouble(closePrices1m);
                 double[] arrHigh1m = ConvertToDouble(highPrices1m);
                 double[] arrLow1m = ConvertToDouble(lowPrices1m);
+
+/*                //RSI**********************************************
+                decimal[] array = closePrices1m.ToArray();
+                var RSI1m = Indicators.Rsi(array, 8);
+
+                var rsi1m_val = RSI1m.Rsi[RSI1m.Rsi.Length - 1];
+                var rsi_val_format1m = Math.Round(rsi1m_val, 2);
+
+                if (rsi_val_format1m > 40)
+                {
+                    enter_points += 1;
+                }
+                Console.WriteLine("RSI: " + rsi_val_format1m);*/
 
 
                 /*                //GetPrice*********************************************
@@ -693,7 +706,7 @@ namespace botBinance
         {
             var buyClient = new BinanceClient(new BinanceClientOptions
             {
-                ApiCredentials = new ApiCredentials("", ""),
+                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
                 SpotApiOptions = new BinanceApiClientOptions
                 {
                     BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
@@ -763,7 +776,7 @@ namespace botBinance
         {
             var buyClient = new BinanceClient(new BinanceClientOptions
             {
-                ApiCredentials = new ApiCredentials("", ""),
+                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
                 SpotApiOptions = new BinanceApiClientOptions
                 {
                     BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
@@ -939,7 +952,7 @@ namespace botBinance
         {
             var sellClient = new BinanceClient(new BinanceClientOptions
             {
-                ApiCredentials = new ApiCredentials("", ""),
+                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
                 SpotApiOptions = new BinanceApiClientOptions
                 {
                     BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
@@ -1089,7 +1102,7 @@ namespace botBinance
         {
             var sellClient = new BinanceClient(new BinanceClientOptions
             {
-                ApiCredentials = new ApiCredentials("", ""),
+                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
                 SpotApiOptions = new BinanceApiClientOptions
                 {
                     BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
@@ -1393,7 +1406,7 @@ namespace botBinance
 
         public static void CheckShort()
         {
-            MACD macd = new MACD();
+            /*MACD macd = new MACD();*/
 
             dynamic closePrices1m = new List<decimal>();
             dynamic highPrices1m = new List<decimal>();
@@ -1736,8 +1749,8 @@ namespace botBinance
             double[] lowerBand;
 
             CalculateBollingerBands(arrCloses1m, period, deviation, out sma, out upperBand, out lowerBand);
-            Console.WriteLine("BollingerBands SMA: {1}, Upper Band: {2}, Lower Band: {3}", Math.Round(prices[prices.Length - 1], 2), Math.Round(sma[sma.Length - 1], 2), Math.Round(upperBand[upperBand.Length - 1], 2), Math.Round(lowerBand[lowerBand.Length - 1], 2));
-            if (Math.Round(prices[prices.Length - 1], 2) <= Math.Round(lowerBand[lowerBand.Length - 1], 2))
+            Console.WriteLine("BollingerBands SMA: {1}, Upper Band: {2}, Lower Band: {3}", Math.Round(prices[prices.Length - 1], 4), Math.Round(sma[sma.Length - 1], 4), Math.Round(upperBand[upperBand.Length - 1], 4), Math.Round(lowerBand[lowerBand.Length - 1], 4 ));
+            if (Math.Round(prices[prices.Length - 1], 4) <= Math.Round(lowerBand[lowerBand.Length - 1], 4))
             {
                 enter_points += 1;
             }
@@ -1885,8 +1898,8 @@ namespace botBinance
             double[] lowerBand;
 
             CalculateBollingerBands(arrCloses1m, period, deviation, out sma, out upperBand, out lowerBand);
-            Console.WriteLine("BollingerBands  SMA: {1}, Upper Band: {2}, Lower Band: {3}", Math.Round(prices[prices.Length - 1], 2), Math.Round(sma[sma.Length - 1], 2), Math.Round(upperBand[upperBand.Length - 1], 2), Math.Round(lowerBand[lowerBand.Length - 1], 2));
-            if (Math.Round(prices[prices.Length - 1], 2) >= Math.Round(upperBand[upperBand.Length - 1], 2))
+            Console.WriteLine("BollingerBands  SMA: {1}, Upper Band: {2}, Lower Band: {3}", Math.Round(prices[prices.Length - 1], 4), Math.Round(sma[sma.Length - 1], 4), Math.Round(upperBand[upperBand.Length - 1], 4), Math.Round(lowerBand[lowerBand.Length - 1], 4));
+            if (Math.Round(prices[prices.Length - 1], 4) >= Math.Round(upperBand[upperBand.Length - 1], 4))
             {
                 enter_points += 1;
             }
