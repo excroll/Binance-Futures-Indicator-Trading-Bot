@@ -51,11 +51,12 @@ namespace botBinance
         static int RSI_Period = 14;
 
         static double currentPrice = 1;
-        static double threshold = 0.00025; // 50% deviation from the price
+        static double threshold = 0.00025; // deviation from the price
         static double profit_precent = 1.00301;
         static double profit_precentLimitMarket = 1.0000;
-        static string API_KEY = "CWu87cC8YQxHxOOBP7fXymhhhMFnLHqDAH5WX0uBD6wap4R2t3JWepq3Nr8BWAAL";
-        static string API_SECRET = "EWABkaTUyXoXxGqKgDkqQxGNe94dkOKussznvNhlclW5XpU6G5FieLqzDf2GI8Su";
+
+        static string API_KEY = "";
+        static string API_SECRET = "";
 
         static string BUYside = "BUY";
         static string SELLside = "SELL";
@@ -65,6 +66,7 @@ namespace botBinance
         public static double quantity = 24;
         public static double quantityMartin = quantity * 2;
 
+        static int newLeverage = 1; // Leverage BinanceFutures
         static string baseQ = "XRP";
         static string quoteQ = "USDT";
         static string symbol = baseQ + quoteQ;
@@ -724,11 +726,19 @@ namespace botBinance
                 }
             });
 
+            var changeLeverageResult = buyClient.UsdFuturesApi.Account.ChangeInitialLeverageAsync(symbol, newLeverage).Result;
+
+            if (!changeLeverageResult.Success)
+            {
+                Console.WriteLine($"Ошибка при изменении кредитного плеча: {changeLeverageResult.Error.Message}");
+                return;
+            }
+
             var openPositionResult = buyClient.UsdFuturesApi.Trading.PlaceOrderAsync(symbol, OrderSide.Buy, FuturesOrderType.Market, quantityDec).Result;
             Console.WriteLine(openPositionResult.Error);
             Thread.Sleep(2000);
 
-            var dateTime = System.DateTime.Now;
+            var dateTime = DateTime.Now;
 
             List<decimal> orderIdArray = new List<decimal>();
             List<decimal> priceOrderArray = new List<decimal>();
@@ -794,11 +804,19 @@ namespace botBinance
                 }
             });
 
+            var changeLeverageResult = buyClient.UsdFuturesApi.Account.ChangeInitialLeverageAsync(symbol, newLeverage).Result;
+
+            if (!changeLeverageResult.Success)
+            {
+                Console.WriteLine($"Ошибка при изменении кредитного плеча: {changeLeverageResult.Error.Message}");
+                return;
+            }
+
             var openPositionResult = buyClient.UsdFuturesApi.Trading.PlaceOrderAsync(symbol, OrderSide.Sell, FuturesOrderType.Market, quantityDec).Result;
             Console.WriteLine(openPositionResult.Error);
             Thread.Sleep(2000);
 
-            var dateTime = System.DateTime.Now;
+            var dateTime = DateTime.Now;
 
             List<decimal> orderIdArray = new List<decimal>();
             List<decimal> priceOrderArray = new List<decimal>();
