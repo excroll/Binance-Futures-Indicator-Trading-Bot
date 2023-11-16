@@ -54,8 +54,8 @@ namespace botBinance
         static double threshold = 0.00025; // 50% deviation from the price
         static double profit_precent = 1.00301;
         static double profit_precentLimitMarket = 1.0000;
-        static string API_KEY = "";
-        static string API_SECRET = "";
+        static string API_KEY = "CWu87cC8YQxHxOOBP7fXymhhhMFnLHqDAH5WX0uBD6wap4R2t3JWepq3Nr8BWAAL";
+        static string API_SECRET = "EWABkaTUyXoXxGqKgDkqQxGNe94dkOKussznvNhlclW5XpU6G5FieLqzDf2GI8Su";
 
         static string BUYside = "BUY";
         static string SELLside = "SELL";
@@ -291,6 +291,8 @@ namespace botBinance
         }
 
 
+
+        // stop-loss methods and take-profit percent////////
         static void MarketOrderLong()
         {
             var client = new BinanceClient(new BinanceClientOptions
@@ -474,6 +476,8 @@ namespace botBinance
 
 
         }
+        //////////
+
 
         //check price for sell/buy Futures order
         static void LongMarketTakeProfit()
@@ -843,111 +847,7 @@ namespace botBinance
 
 
 
-        private static async void SellOrderMartin(double quantity)
-        {
-            HttpClient clientSELL = new HttpClient();
-            long timestamp2 = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
-
-            string queryString2 = "symbol=BTCUSDT&side=SELL&type=MARKET&quantity=" + quantity.ToString().Replace(",", ".") + "&recvWindow=5000&timestamp=" + timestamp2;
-            string signature2 = GetSignature(queryString2);
-
-            clientSELL.DefaultRequestHeaders.Add("X-MBX-APIKEY", API_KEY);
-            HttpResponseMessage response3 = await clientSELL.PostAsync($"https://api.binance.com/api/v3/order?{queryString2}&signature={signature2}", null);
-            string data3 = await response3.Content.ReadAsStringAsync();
-            /*Console.WriteLine(data3);*/
-
-            string jsonData3 = data3.ToString();
-            dynamic jsonObj3 = JsonConvert.DeserializeObject(jsonData3);
-
-            // Получение значения price массива ключа fils
-            try
-            {
-                double sellPriceDouble = jsonObj3.fills[0].price;
-                double sellQTYJSON = jsonObj3.fills[0].qty;
-                double cummulativeSELLqtyJSON = jsonObj3.cummulativeQuoteQty;
-                double buyPrice = priceJSONglobal;
-                sellPrice = sellPriceDouble;
-
-                double summOrder2 = sellPrice - buyPrice; //от цены продажи за 1 ордер вычитается цена покупки
-
-                double percentageProfitSession2 = (summOrder2 / buyPrice) * 100;
-
-
-                string percentageProfitFormat2 = string.Format("{0:f4}", percentageProfitSession2);
-                percent_profitSummaryOneOrder = percentageProfitSession2;
-
-
-                profit_summary = cummulativeSELLqtyJSON - cummulativeJSONglobalBase;
-                percent_profitSummary = (profit_summary / cummulativeJSONglobalBase) * 100;
-
-                summaryProfit = summaryProfit + profit_summary;
-                percentageProfitSummary = percentageProfitSummary + percent_profitSummary;
-                string profit_usd_Format = string.Format("{0:f4}", profit_summary);
-                string profit_all_summFormat = string.Format("{0:f4}", summaryProfit);
-                string percentageProfitSummaryFormat = string.Format("{0:f4}", percentageProfitSummary);
-
-                Console.WriteLine("\n");
-                Console.WriteLine("**************************************************");
-                Console.WriteLine("*************   ОРДЕР НА ПРОДАЖУ   ***************");
-                Console.WriteLine("**************************************************" + "\n");
-                Console.Write("Цена покупки : ");  //"Профит: " + percentageProfitFormat + "%" + "\n");
-                /*Console.ForegroundColor = ConsoleColor.Green;*/
-                Console.Write(priceJSONglobal + "\n");
-                Console.ResetColor();
-                Console.Write("Цена продажи : ");
-                /*Console.ForegroundColor = ConsoleColor.Red;*/
-                Console.Write(sellPriceDouble + "\n");
-                Console.ResetColor();
-
-                //summaryProfit
-
-                Console.Write("\nДоход за 1 ордер    : ");
-                if (Convert.ToDouble(percentageProfitFormat2) < 0)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(percentageProfitFormat2 + " %" + "  " + profit_usd_Format + " $");
-
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write(percentageProfitFormat2 + " %" + "  " + profit_usd_Format + " $");
-
-                }
-
-                Console.ResetColor();
-                Console.Write("\nДоход за все ордера : ");
-                if (Convert.ToDouble(profit_all_summFormat) < 0)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(percentageProfitSummaryFormat + " %" + "  " + profit_all_summFormat + " $" + "\n");
-
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write(percentageProfitSummaryFormat + " %" + "  " + profit_all_summFormat + " $" + "\n");
-
-                }
-
-                Console.ResetColor();
-                Console.WriteLine();
-                Console.WriteLine("SELL >>  " + "USDT: " + cummulativeSELLqtyJSON + "  BTC: " + sellQTYJSON);
-                Console.WriteLine("BUY  >>  " + "USDT: " + cummulativeJSONglobalBase + "  BTC: " + qtyJSONglobalBase + "\n");
-
-                Console.WriteLine("**************************************************");
-
-                isSell = true;
-                Console.WriteLine("Выполнено!\n");
-
-            }
-            catch
-            {
-                Console.WriteLine("Error");
-
-            }
-        }
-
+        // 
         private static void SellOrderFururesLong()
         {
             var sellClient = new BinanceClient(new BinanceClientOptions
@@ -1250,282 +1150,7 @@ namespace botBinance
 
 
 
-        public static void CheckIndicators()
-        {
-            while (true)
-            {
-                CheckLong();
-
-                if (isLong)
-                {
-                    Console.WriteLine("Цикл на проверку Лонг останлвлен");
-                    Thread.Sleep(1000);
-
-
-                    CheckPoints();
-                    break;
-                }
-
-
-                CheckShort();
-
-                if (isShort)
-                {
-                    Console.WriteLine("Цикл на проверку Лонг останлвлен");
-                    Thread.Sleep(1000);
-
-                    CheckPoints();
-                    break;
-                }
-
-
-
-            }
-        }
-
-
-        public static void CheckLong()
-        {
-            /*MACD macd = new MACD();*/
-
-
-            dynamic closePrices1m = new List<decimal>();
-            dynamic highPrices1m = new List<decimal>();
-            dynamic lowPrices1m = new List<decimal>();
-            /*dynamic openPrices1m = new List<decimal>();*/
-
-            var client1m = new BinanceClient();
-            while (true)
-            {
-                var result1m = client1m.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute).Result;
-                if (result1m.Success)
-                {
-                    foreach (var candle in result1m.Data)
-                    {
-                        closePrices1m.Add(candle.ClosePrice);
-                        highPrices1m.Add(candle.HighPrice);
-                        lowPrices1m.Add(candle.LowPrice);
-                        /*openPrices1m.Add(candle.OpenPrice);*/
-
-                    }
-                }
-                else
-                {
-                    /*Console.WriteLine($"Ошибка: {result1m.Error.Message}");*/
-                }
-                double[] arrCloses1m = ConvertToDouble(closePrices1m);
-                /*            double[] arrOpen1m = ConvertToDouble(openPrices1m);*/
-                double[] arrHigh1m = ConvertToDouble(highPrices1m);
-                double[] arrLow1m = ConvertToDouble(lowPrices1m);
-                int enter_points = 0;
-
-                //MACD**********************************************
-                /*var (macdLine1m, signalLine1m) = macd.MainMACD();
-                var macd1m_val = macdLine1m[macdLine1m.Length - 1];
-                var signalLine_val = signalLine1m[signalLine1m.Length - 1];
-                var macd1m_val_format = Math.Round(macd1m_val, 3);
-                var sign1m_val_format = Math.Round(signalLine_val, 3);
-
-                *//*if (macd1m_val_format > sign1m_val_format && macd1m_val_format < 0 && sign1m_val_format < 0)*//*
-                if (macd1m_val_format > sign1m_val_format)
-                {
-                    enter_points += 1;
-                    *//*Console.WriteLine("Long MACD: {0}, Signal: {1}", macd1m_val_format, sign1m_val_format);*//*
-                }*/
-
-
-                //SMA10*30*********************************************
-                decimal[] arrSMA = closePrices1m.ToArray();
-
-                var SMA1m10 = Indicators.Sma(arrSMA, 10);
-                var SMA1m10_val = SMA1m10.Ma[SMA1m10.Ma.Length - 1];
-                var SMA1m10_val_format1m = Math.Round(SMA1m10_val, 2);
-
-                var SMA1m30 = Indicators.Sma(arrSMA, 30);
-                var SMA1m30_val = SMA1m30.Ma[SMA1m30.Ma.Length - 1];
-                var SMA1m30_val_format1m = Math.Round(SMA1m30_val, 2);
-
-                /*            Console.WriteLine();
-                            Console.WriteLine("SMA10: " + SMA1m10_val_format1m);
-                            Console.WriteLine("SMA30: " + SMA1m30_val_format1m);*/
-
-
-                if (SMA1m10_val_format1m > SMA1m30_val_format1m)
-                {
-                    enter_points += 1;
-                }
-
-
-                //RSI**********************************************
-                decimal[] array = closePrices1m.ToArray();
-                var RSI1m = Indicators.Rsi(array, 8);
-
-                var rsi1m_val = RSI1m.Rsi[RSI1m.Rsi.Length - 1];
-                var rsi_val_format1m = Math.Round(rsi1m_val, 2);
-
-                if (rsi_val_format1m > 40 && rsi_val_format1m > 25 && rsi_val_format1m < 50)
-                {
-                    enter_points += 1;
-                }
-                /*Console.WriteLine("RSI: " + rsi_val_format1m);*/
-
-
-                //STOCH**********************************************
-                /*var (fastKValues1m, slowKValues1m) = STOCH(arrHigh1m, arrLow1m, arrCloses1m, fastK1m, slowD1m, smooth1m);
-                var fastK_val1m = fastKValues1m[fastKValues1m.Length - 1];
-                var slowD_val1m = slowKValues1m[slowKValues1m.Length - 1];
-                var fastK_val_format1m = Math.Round(fastK_val1m, 3);
-                var slowD_val_format1m = Math.Round(slowD_val1m, 3);
-                if (fastK_val_format1m > slowD_val_format1m && fastK_val_format1m < 50 && slowD_val_format1m < 50 && fastK_val_format1m > 5 && slowD_val_format1m > 5)
-                {
-
-                    enter_points += 1;
-                    *//*Console.WriteLine("STOCH1m: " + enter_points);*//*
-                }*/
-                /* Console.WriteLine("STOCH fastKValues1m " + fastK_val_format1m + " Stoch slowKValues1m " + slowD_val_format1m);*/
-
-
-                if (enter_points == POINTS_TO_ENTER)
-                {
-                    BuyOrder();
-
-                    Console.WriteLine("Покупка Long");
-                    Thread.Sleep(1000);
-
-                    MarketOrderLong();
-                    Thread.Sleep(1000);
-                    break;
-                }
-                else
-                {
-                    continue;
-                }
-            }
-
-        }
-
-        public static void CheckShort()
-        {
-            /*MACD macd = new MACD();*/
-
-            dynamic closePrices1m = new List<decimal>();
-            dynamic highPrices1m = new List<decimal>();
-            dynamic lowPrices1m = new List<decimal>();
-            /*dynamic openPrices1m = new List<decimal>();*/
-
-            var client1m = new BinanceClient();
-
-            while (true)
-            {
-                var result1m = client1m.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute).Result;
-                if (result1m.Success)
-                {
-                    foreach (var candle in result1m.Data)
-                    {
-                        closePrices1m.Add(candle.ClosePrice);
-                        highPrices1m.Add(candle.HighPrice);
-                        lowPrices1m.Add(candle.LowPrice);
-                        /*openPrices1m.Add(candle.OpenPrice);*/
-
-                    }
-                }
-                else
-                {
-                    /*Console.WriteLine($"Ошибка: {result1m.Error.Message}");*/
-                }
-                double[] arrCloses1m = ConvertToDouble(closePrices1m);
-                /*            double[] arrOpen1m = ConvertToDouble(openPrices1m);*/
-                double[] arrHigh1m = ConvertToDouble(highPrices1m);
-                double[] arrLow1m = ConvertToDouble(lowPrices1m);
-                int enter_points = 0;
-
-                //MACD**********************************************
-                /*var (macdLine1m, signalLine1m) = macd.MainMACD();
-                var macd1m_val = macdLine1m[macdLine1m.Length - 1];
-                var signalLine_val = signalLine1m[signalLine1m.Length - 1];
-                var macd1m_val_format = Math.Round(macd1m_val, 3);
-                var sign1m_val_format = Math.Round(signalLine_val, 3);
-
-                *//*if (macd1m_val_format > sign1m_val_format && macd1m_val_format < 0 && sign1m_val_format < 0)*//*
-                if (macd1m_val_format > sign1m_val_format)
-                {
-                    enter_points += 1;
-                    *//*Console.WriteLine("Long MACD: {0}, Signal: {1}", macd1m_val_format, sign1m_val_format);*//*
-                }*/
-
-
-                //SMA10*30*********************************************
-                decimal[] arrSMA = closePrices1m.ToArray();
-
-                var SMA1m10 = Indicators.Sma(arrSMA, 10);
-                var SMA1m10_val = SMA1m10.Ma[SMA1m10.Ma.Length - 1];
-                var SMA1m10_val_format1m = Math.Round(SMA1m10_val, 2);
-
-                var SMA1m30 = Indicators.Sma(arrSMA, 30);
-                var SMA1m30_val = SMA1m30.Ma[SMA1m30.Ma.Length - 1];
-                var SMA1m30_val_format1m = Math.Round(SMA1m30_val, 2);
-
-                /*            Console.WriteLine();
-                            Console.WriteLine("SMA10: " + SMA1m10_val_format1m);
-                            Console.WriteLine("SMA30: " + SMA1m30_val_format1m);*/
-
-
-                if (SMA1m10_val_format1m < SMA1m30_val_format1m)
-                {
-                    enter_points += 1;
-                }
-
-
-                //RSI**********************************************
-                decimal[] array = closePrices1m.ToArray();
-                var RSI1m = Indicators.Rsi(array, 8);
-
-                var rsi1m_val = RSI1m.Rsi[RSI1m.Rsi.Length - 1];
-                var rsi_val_format1m = Math.Round(rsi1m_val, 2);
-
-                if (rsi_val_format1m < 60 && rsi_val_format1m < 75 && rsi_val_format1m > 50)
-                {
-                    enter_points += 1;
-                }
-                /*Console.WriteLine("RSI: " + rsi_val_format1m);*/
-
-
-                //STOCH**********************************************
-                /*var (fastKValues1m, slowKValues1m) = STOCH(arrHigh1m, arrLow1m, arrCloses1m, fastK1m, slowD1m, smooth1m);
-                var fastK_val1m = fastKValues1m[fastKValues1m.Length - 1];
-                var slowD_val1m = slowKValues1m[slowKValues1m.Length - 1];
-                var fastK_val_format1m = Math.Round(fastK_val1m, 3);
-                var slowD_val_format1m = Math.Round(slowD_val1m, 3);
-                if (fastK_val_format1m > slowD_val_format1m && fastK_val_format1m < 50 && slowD_val_format1m < 50 && fastK_val_format1m > 5 && slowD_val_format1m > 5)
-                {
-
-                    enter_points += 1;
-                    *//*Console.WriteLine("STOCH1m: " + enter_points);*//*
-                }*/
-                /* Console.WriteLine("STOCH fastKValues1m " + fastK_val_format1m + " Stoch slowKValues1m " + slowD_val_format1m);*/
-
-
-                if (enter_points == POINTS_TO_ENTER)
-                {
-                    BuyOrderShort();
-
-                    Console.WriteLine("Покупка Long");
-                    Thread.Sleep(1000);
-
-                    MarketOrderShort();
-                    Thread.Sleep(1000);
-                    break;
-                }
-                else
-                {
-                    continue;
-                }
-            }
-
-        }
-
-
-
+        //check active price for the enter to deal //////////
         public static void CheckIndicatorsStart()
         {
             Console.WriteLine("Проверка индикаторов для входа в сделку...");
@@ -1553,7 +1178,6 @@ namespace botBinance
 
             }
         }
-
 
         public static void CheckLongStart()
         {
@@ -1923,7 +1547,115 @@ namespace botBinance
             
 
         }
+        ////////////
 
+
+
+        private static async void SellOrderMartin(double quantity)
+        {
+            // experemental method martingale double summ of next deal
+            HttpClient clientSELL = new HttpClient();
+            long timestamp2 = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
+
+            string queryString2 = "symbol=BTCUSDT&side=SELL&type=MARKET&quantity=" + quantity.ToString().Replace(",", ".") + "&recvWindow=5000&timestamp=" + timestamp2;
+            string signature2 = GetSignature(queryString2);
+
+            clientSELL.DefaultRequestHeaders.Add("X-MBX-APIKEY", API_KEY);
+            HttpResponseMessage response3 = await clientSELL.PostAsync($"https://api.binance.com/api/v3/order?{queryString2}&signature={signature2}", null);
+            string data3 = await response3.Content.ReadAsStringAsync();
+            /*Console.WriteLine(data3);*/
+
+            string jsonData3 = data3.ToString();
+            dynamic jsonObj3 = JsonConvert.DeserializeObject(jsonData3);
+
+            // Получение значения price массива ключа fils
+            try
+            {
+                double sellPriceDouble = jsonObj3.fills[0].price;
+                double sellQTYJSON = jsonObj3.fills[0].qty;
+                double cummulativeSELLqtyJSON = jsonObj3.cummulativeQuoteQty;
+                double buyPrice = priceJSONglobal;
+                sellPrice = sellPriceDouble;
+
+                double summOrder2 = sellPrice - buyPrice; //от цены продажи за 1 ордер вычитается цена покупки
+
+                double percentageProfitSession2 = (summOrder2 / buyPrice) * 100;
+
+
+                string percentageProfitFormat2 = string.Format("{0:f4}", percentageProfitSession2);
+                percent_profitSummaryOneOrder = percentageProfitSession2;
+
+
+                profit_summary = cummulativeSELLqtyJSON - cummulativeJSONglobalBase;
+                percent_profitSummary = (profit_summary / cummulativeJSONglobalBase) * 100;
+
+                summaryProfit = summaryProfit + profit_summary;
+                percentageProfitSummary = percentageProfitSummary + percent_profitSummary;
+                string profit_usd_Format = string.Format("{0:f4}", profit_summary);
+                string profit_all_summFormat = string.Format("{0:f4}", summaryProfit);
+                string percentageProfitSummaryFormat = string.Format("{0:f4}", percentageProfitSummary);
+
+                Console.WriteLine("\n");
+                Console.WriteLine("**************************************************");
+                Console.WriteLine("*************   ОРДЕР НА ПРОДАЖУ   ***************");
+                Console.WriteLine("**************************************************" + "\n");
+                Console.Write("Цена покупки : ");  //"Профит: " + percentageProfitFormat + "%" + "\n");
+                /*Console.ForegroundColor = ConsoleColor.Green;*/
+                Console.Write(priceJSONglobal + "\n");
+                Console.ResetColor();
+                Console.Write("Цена продажи : ");
+                /*Console.ForegroundColor = ConsoleColor.Red;*/
+                Console.Write(sellPriceDouble + "\n");
+                Console.ResetColor();
+
+                //summaryProfit
+
+                Console.Write("\nДоход за 1 ордер    : ");
+                if (Convert.ToDouble(percentageProfitFormat2) < 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(percentageProfitFormat2 + " %" + "  " + profit_usd_Format + " $");
+
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(percentageProfitFormat2 + " %" + "  " + profit_usd_Format + " $");
+
+                }
+
+                Console.ResetColor();
+                Console.Write("\nДоход за все ордера : ");
+                if (Convert.ToDouble(profit_all_summFormat) < 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(percentageProfitSummaryFormat + " %" + "  " + profit_all_summFormat + " $" + "\n");
+
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(percentageProfitSummaryFormat + " %" + "  " + profit_all_summFormat + " $" + "\n");
+
+                }
+
+                Console.ResetColor();
+                Console.WriteLine();
+                Console.WriteLine("SELL >>  " + "USDT: " + cummulativeSELLqtyJSON + "  BTC: " + sellQTYJSON);
+                Console.WriteLine("BUY  >>  " + "USDT: " + cummulativeJSONglobalBase + "  BTC: " + qtyJSONglobalBase + "\n");
+
+                Console.WriteLine("**************************************************");
+
+                isSell = true;
+                Console.WriteLine("Выполнено!\n");
+
+            }
+            catch
+            {
+                Console.WriteLine("Error");
+
+            }
+        }
 
         public static void CheckPoints()
         {
