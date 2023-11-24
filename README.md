@@ -1,4 +1,4 @@
-# Binance-Futures-Indicators-Trading-Bot
+# Binance-Futures-Indicator-Trading-Bot
 
 **Paste your API_KEY, API_SECRET to the corresponding variables.<br />**
 
