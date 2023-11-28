@@ -66,6 +66,7 @@ namespace botBinance
         public static double quantity = 24;
         public static double quantityMartin = quantity * 2;
 
+        static private KlineInterval selectedInterval = KlineInterval.OneMinute; // <<< set and change KlineInterval 
         static int newLeverage = 1; // Leverage BinanceFutures
         static string baseQ = "XRP";
         static string quoteQ = "USDT";
@@ -196,21 +197,12 @@ namespace botBinance
 
         static void GetPrice()
         {
-
-            var client23 = new BinanceClient(new BinanceClientOptions
+            var client23 = new BinanceRestClient(options =>
             {
-                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
-                SpotApiOptions = new BinanceApiClientOptions
-                {
-                    BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
-                    AutoTimestamp = false
-                },
-                UsdFuturesApiOptions = new BinanceApiClientOptions
-                {
-                    TradeRulesBehaviour = TradeRulesBehaviour.ThrowError,
-                    BaseAddress = BinanceApiAddresses.Default.UsdFuturesRestClientAddress,
-                    AutoTimestamp = true
-                }
+                options.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET);
+                options.UsdFuturesOptions.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET); // Override the credentials for the USD futures API
+                options.AutoTimestamp = true;
+                options.UsdFuturesOptions.AutoTimestamp = true;
             });
 
             var usdFuturesTradeHistoryData = client23.UsdFuturesApi.ExchangeData.GetTradeHistoryAsync(symbol, limit: 1).Result;
@@ -226,20 +218,12 @@ namespace botBinance
 
         static void LimitOrderAsync()
         {
-            var client = new BinanceClient(new BinanceClientOptions
+            var client = new BinanceRestClient(options =>
             {
-                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
-                SpotApiOptions = new BinanceApiClientOptions
-                {
-                    BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
-                    AutoTimestamp = false
-                },
-                UsdFuturesApiOptions = new BinanceApiClientOptions
-                {
-                    TradeRulesBehaviour = TradeRulesBehaviour.ThrowError,
-                    BaseAddress = BinanceApiAddresses.Default.UsdFuturesRestClientAddress,
-                    AutoTimestamp = true
-                }
+                options.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET);
+                options.UsdFuturesOptions.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET); // Override the credentials for the USD futures API
+                options.AutoTimestamp = true;
+                options.UsdFuturesOptions.AutoTimestamp = true;
             });
 
             var percentStopLoss = 0.0002;
@@ -250,7 +234,7 @@ namespace botBinance
             dynamic lowPrices1m = new List<decimal>();
 
             // Получение минимальной цены текущей свечи
-            var candles = client.SpotApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute, limit: 1).Result;
+            var candles = client.SpotApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval, limit: 1).Result;
             if (candles.Success)
             {
                 foreach (var candle in candles.Data)
@@ -297,29 +281,21 @@ namespace botBinance
         // stop-loss methods and take-profit percent////////
         static void MarketOrderLong()
         {
-            var client = new BinanceClient(new BinanceClientOptions
+            var client = new BinanceRestClient(options =>
             {
-                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
-                SpotApiOptions = new BinanceApiClientOptions
-                {
-                    BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
-                    AutoTimestamp = false
-                },
-                UsdFuturesApiOptions = new BinanceApiClientOptions
-                {
-                    TradeRulesBehaviour = TradeRulesBehaviour.ThrowError,
-                    BaseAddress = BinanceApiAddresses.Default.UsdFuturesRestClientAddress,
-                    AutoTimestamp = true
-                }
+                options.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET);
+                options.UsdFuturesOptions.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET); // Override the credentials for the USD futures API
+                options.AutoTimestamp = true;
+                options.UsdFuturesOptions.AutoTimestamp = true;
             });
 
 
 
-            BinanceClient clientCheckBinance = new BinanceClient();
+            BinanceRestClient clientCheckBinance = new BinanceRestClient();
             dynamic lowPrices1m = new List<decimal>();
 
             // Получение минимальной цены текущей свечи
-            var candles = client.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute, limit: 1).Result;
+            var candles = client.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval, limit: 1).Result;
             if (candles.Success)
             {
                 foreach (var candle in candles.Data)
@@ -390,31 +366,23 @@ namespace botBinance
 
         static void MarketOrderShort()
         {
-            var client = new BinanceClient(new BinanceClientOptions
+            var client = new BinanceRestClient(options =>
             {
-                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
-                SpotApiOptions = new BinanceApiClientOptions
-                {
-                    BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
-                    AutoTimestamp = false
-                },
-                UsdFuturesApiOptions = new BinanceApiClientOptions
-                {
-                    TradeRulesBehaviour = TradeRulesBehaviour.ThrowError,
-                    BaseAddress = BinanceApiAddresses.Default.UsdFuturesRestClientAddress,
-                    AutoTimestamp = true
-                }
+                options.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET);
+                options.UsdFuturesOptions.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET); // Override the credentials for the USD futures API
+                options.AutoTimestamp = true;
+                options.UsdFuturesOptions.AutoTimestamp = true;
             });
 
             var percentStopLoss = 0.0002;
             var percentTakeProfit = 0.0006;
             /*var currentDirection = TradeDirection.Long;*/
 
-            BinanceClient clientCheckBinance = new BinanceClient();
+            BinanceRestClient clientCheckBinance = new BinanceRestClient();
             dynamic highPrices1m = new List<decimal>();
 
             // Получение минимальной цены текущей свечи
-            var candles = client.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute, limit: 1).Result;
+            var candles = client.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval, limit: 1).Result;
             if (candles.Success)
             {
                 foreach (var candle in candles.Data)
@@ -490,13 +458,13 @@ namespace botBinance
             dynamic highPrices1m = new List<decimal>();
             dynamic lowPrices1m = new List<decimal>();
 
-            var client1m = new BinanceClient();
+            var client1m = new BinanceRestClient();
 
             while (true)
             {
                 int enter_points = 0;
                 Console.WriteLine(enter_points);
-                var result1m = client1m.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute).Result;
+                var result1m = client1m.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval).Result;
                 if (result1m.Success)
                 {
                     foreach (var candle in result1m.Data)
@@ -610,12 +578,12 @@ namespace botBinance
             dynamic highPrices1m = new List<decimal>();
             dynamic lowPrices1m = new List<decimal>();
 
-            var client1m = new BinanceClient();
+            var client1m = new BinanceRestClient();
 
             while (true)
             {
                 int enter_points = 0;
-                var result1m = client1m.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute).Result;
+                var result1m = client1m.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval).Result;
                 if (result1m.Success)
                 {
                     foreach (var candle in result1m.Data)
@@ -710,20 +678,12 @@ namespace botBinance
         //methods buy order BuyOrder() - Long, BuyOrderShort() - Short
         static void BuyOrder()
         {
-            var buyClient = new BinanceClient(new BinanceClientOptions
+            var buyClient = new BinanceRestClient(options =>
             {
-                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
-                SpotApiOptions = new BinanceApiClientOptions
-                {
-                    BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
-                    AutoTimestamp = false
-                },
-                UsdFuturesApiOptions = new BinanceApiClientOptions
-                {
-                    TradeRulesBehaviour = TradeRulesBehaviour.ThrowError,
-                    BaseAddress = BinanceApiAddresses.Default.UsdFuturesRestClientAddress,
-                    AutoTimestamp = true
-                }
+                options.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET);
+                options.UsdFuturesOptions.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET); // Override the credentials for the USD futures API
+                options.AutoTimestamp = true;
+                options.UsdFuturesOptions.AutoTimestamp = true;
             });
 
             var changeLeverageResult = buyClient.UsdFuturesApi.Account.ChangeInitialLeverageAsync(symbol, newLeverage).Result;
@@ -788,20 +748,12 @@ namespace botBinance
 
         static void BuyOrderShort()
         {
-            var buyClient = new BinanceClient(new BinanceClientOptions
+            var buyClient = new BinanceRestClient(options =>
             {
-                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
-                SpotApiOptions = new BinanceApiClientOptions
-                {
-                    BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
-                    AutoTimestamp = false
-                },
-                UsdFuturesApiOptions = new BinanceApiClientOptions
-                {
-                    TradeRulesBehaviour = TradeRulesBehaviour.ThrowError,
-                    BaseAddress = BinanceApiAddresses.Default.UsdFuturesRestClientAddress,
-                    AutoTimestamp = true
-                }
+                options.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET);
+                options.UsdFuturesOptions.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET); // Override the credentials for the USD futures API
+                options.AutoTimestamp = true;
+                options.UsdFuturesOptions.AutoTimestamp = true;
             });
 
             var changeLeverageResult = buyClient.UsdFuturesApi.Account.ChangeInitialLeverageAsync(symbol, newLeverage).Result;
@@ -868,20 +820,12 @@ namespace botBinance
         // 
         private static void SellOrderFururesLong()
         {
-            var sellClient = new BinanceClient(new BinanceClientOptions
+            var sellClient = new BinanceRestClient(options =>
             {
-                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
-                SpotApiOptions = new BinanceApiClientOptions
-                {
-                    BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
-                    AutoTimestamp = false
-                },
-                UsdFuturesApiOptions = new BinanceApiClientOptions
-                {
-                    TradeRulesBehaviour = TradeRulesBehaviour.ThrowError,
-                    BaseAddress = BinanceApiAddresses.Default.UsdFuturesRestClientAddress,
-                    AutoTimestamp = true
-                }
+                options.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET);
+                options.UsdFuturesOptions.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET); // Override the credentials for the USD futures API
+                options.AutoTimestamp = true;
+                options.UsdFuturesOptions.AutoTimestamp = true;
             });
 
 
@@ -1018,20 +962,12 @@ namespace botBinance
 
         private static void SellOrderFururesShort()
         {
-            var sellClient = new BinanceClient(new BinanceClientOptions
+            var sellClient = new BinanceRestClient(options =>
             {
-                ApiCredentials = new ApiCredentials(API_KEY, API_SECRET),
-                SpotApiOptions = new BinanceApiClientOptions
-                {
-                    BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
-                    AutoTimestamp = false
-                },
-                UsdFuturesApiOptions = new BinanceApiClientOptions
-                {
-                    TradeRulesBehaviour = TradeRulesBehaviour.ThrowError,
-                    BaseAddress = BinanceApiAddresses.Default.UsdFuturesRestClientAddress,
-                    AutoTimestamp = true
-                }
+                options.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET);
+                options.UsdFuturesOptions.ApiCredentials = new ApiCredentials(API_KEY, API_SECRET); // Override the credentials for the USD futures API
+                options.AutoTimestamp = true;
+                options.UsdFuturesOptions.AutoTimestamp = true;
             });
 
 
@@ -1212,10 +1148,10 @@ namespace botBinance
                         dynamic lowPrices15m = new List<decimal>();*/
 
 
-            var client1m = new BinanceClient();
-            var client15m = new BinanceClient();
+            var client1m = new BinanceRestClient();
+            var client15m = new BinanceRestClient();
 
-            var result1m = client1m.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute).Result;
+            var result1m = client1m.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval).Result;
             if (result1m.Success)
             {
                 foreach (var candle in result1m.Data)
@@ -1275,7 +1211,7 @@ namespace botBinance
             }*/
 
 
-            /*var result15m = client15m.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute).Result;
+            /*var result15m = client15m.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval).Result;
             if (result1m.Success)
             {
                 foreach (var candle in result1m.Data)
@@ -1427,9 +1363,9 @@ namespace botBinance
             dynamic lowPrices1m = new List<decimal>();
             /*dynamic openPrices1m = new List<decimal>();*/
 
-            var client1m = new BinanceClient();
+            var client1m = new BinanceRestClient();
 
-                var result1m = client1m.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute).Result;
+                var result1m = client1m.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval).Result;
                 if (result1m.Success)
                 {
                     foreach (var candle in result1m.Data)
@@ -1684,8 +1620,8 @@ namespace botBinance
 
 
 
-            var client2 = new BinanceClient();
-            var result1m2 = client2.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute).Result;
+            var client2 = new BinanceRestClient();
+            var result1m2 = client2.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval).Result;
             if (result1m2.Success)
             {
                 foreach (var candle in result1m2.Data)
@@ -1807,8 +1743,8 @@ namespace botBinance
             while (true)
             {
 
-                var client2 = new BinanceClient();
-                var result1m2 = client2.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute).Result;
+                var client2 = new BinanceRestClient();
+                var result1m2 = client2.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval).Result;
                 if (result1m2.Success)
                 {
 
@@ -1994,8 +1930,8 @@ namespace botBinance
             dynamic lowPrices1m = new List<decimal>();
 
 
-                var client2 = new BinanceClient();
-                var result1m2 = client2.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute).Result;
+                var client2 = new BinanceRestClient();
+                var result1m2 = client2.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval).Result;
                 if (result1m2.Success)
                 {
                     foreach (var candle in result1m2.Data)
@@ -2107,8 +2043,8 @@ namespace botBinance
             while (true)
             {
 
-                var client2 = new BinanceClient();
-                var result1m2 = client2.SpotApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute).Result;
+                var client2 = new BinanceRestClient();
+                var result1m2 = client2.SpotApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval).Result;
                 if (result1m2.Success)
                 {
                     foreach (var candle in result1m2.Data)
@@ -2206,8 +2142,8 @@ namespace botBinance
             while (true)
             {
 
-                var client2 = new BinanceClient();
-                var result1m2 = client2.SpotApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute).Result;
+                var client2 = new BinanceRestClient();
+                var result1m2 = client2.SpotApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval).Result;
                 if (result1m2.Success)
                 {
                     foreach (var candle in result1m2.Data)
@@ -2354,11 +2290,11 @@ namespace botBinance
         {
             public (double[], double[]) MainMACD()
             {
-                var client111m = new BinanceClient();
+                var client111m = new BinanceRestClient();
                 dynamic closePrices1m = new List<decimal>();
 
 
-                var result1m = client111m.SpotApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute).Result;
+                var result1m = client111m.SpotApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval).Result;
                 if (result1m.Success)
                 {
                     foreach (var candle in result1m.Data)
@@ -2447,11 +2383,11 @@ namespace botBinance
 
         public static double[] CalculateRSI(int period)
         {
-            var client111m = new BinanceClient();
+            var client111m = new BinanceRestClient();
             dynamic closePrices1m = new List<decimal>();
 
 
-            var result1m = client111m.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, KlineInterval.OneMinute).Result;
+            var result1m = client111m.UsdFuturesApi.ExchangeData.GetKlinesAsync(symbol, selectedInterval).Result;
             if (result1m.Success)
             {
                 foreach (var candle in result1m.Data)
