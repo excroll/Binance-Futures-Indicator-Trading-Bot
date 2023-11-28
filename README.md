@@ -1,4 +1,4 @@
-# Binance-Futures-Indicators-Trading-Bot
+# Binance-Futures-Indicator-Trading-Bot
 
 **Paste your API_KEY, API_SECRET to the corresponding variables.<br />**
 
@@ -7,9 +7,6 @@ The bot trades on 2 indicators (can be changed in the code) <b>RSI</b> and <b>Bo
 Also implements a stop loss function and trailng stop, the code can be changed so that the sale takes place by any percentage (for example: the price increased by 2% - the sale of an asset) the percentage can of course be changed.</br>
 Bot is not 100% finalized, but it sometimes showed me profits, sometimes losses, it needs to be tested and configured, which I don't want do.<br />
 It would be even better to attach a database to it, but this is optional.<br />
-
-
-<b> <font color="red" size="24">Change the leverage on BINANCE Futures to x1 !!!!</font> </b>
 
 <b>Attention! This bot is not finalized and not configured until the final, so be careful when trading on the stock exchange, I am not responsible for your possible financial losses. </b><br />
 
