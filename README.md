@@ -1,7 +1,7 @@
 # Binance-Futures-Indicator-Trading-Bot
 
 **Paste your API_KEY, API_SECRET to the corresponding variables.<br />**
-***this is a project where I studied and mastered c#, so the quality of writing code and methods may have a better implementation***
+***This is a project where I studied and mastered c#, so the quality of writing code and methods may have a better implementation***<br />
 The bot trades on 2 indicators (can be changed in the code) <b>RSI</b> and <b>BollingerBands</b> by changing the variable <b>POINTS_TO_ENTER = 2 </b> (if needed uncomment lines of code with other indicators). You can set points to enter the transaction and more indicators, this strategy when the RSI value falls below 35 (oversold zone) now they are +1 on **RSI** and when the price crosses the lower Bollinger + 1 on **BollingerBands** bot buys Long/Short, the same logic for sale (when the price crosses the Bollinger SMA  **enter_points +1** realizes the profit and completes the Short/Long Market transaction). </br> 
 
 Also implements a stop loss function and trailng stop, the code can be changed so that the sale takes place by any percentage (for example: the price increased by 2% - the sale of an asset) the percentage can of course be changed.</br>
