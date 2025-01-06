@@ -4,7 +4,7 @@
 
 The bot trades on 2 indicators (can be changed in the code) <b>RSI</b> and <b>BollingerBands</b> by changing the variable <b>POINTS_TO_ENTER = 2 </b> (if needed uncomment lines of code with other indicators). You can set points to enter the transaction and more indicators, this strategy when the RSI value falls below 35 (oversold zone) now they are +1 on **RSI** and when the price crosses the lower Bollinger + 1 on **BollingerBands** bot buys Long/Short, the same logic for sale (when the price crosses the Bollinger SMA  **enter_points +1** realizes the profit and completes the Short/Long Market transaction). </br> 
 
-Also implements a stop loss function and trailng stop, the code can be changed so that the sale takes place by any percentage (for example: the price increased by 2% - the sale of an asset).</br>
+Also implements a stop loss function, the code can be changed so that the sale takes place by any percentage (for example: the price increased by 2% - the sale of an asset).</br>
 Bot is not 100% finalized, but it sometimes showed me profits, sometimes losses, it needs to be tested and configured, which I don't want do.<br />
 It would be even better to attach a database to it, but this is optional.<br />
 
